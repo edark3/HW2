@@ -1,0 +1,12 @@
+For Part IV, I wrote a local Node.js client script (analysis.js) using the axios HTTP library to send requests to both deployed instances.
+
+Latency Measurement (IV-A):
+- For each instance (US and EU), the script sends 10 requests to /register and 10 requests to /list.
+- The script measures latency by recording timestamps with Date.now() immediately before and after each request.
+- It computes and prints the average latency in milliseconds for each endpoint on each instance.
+
+Eventual Consistency Test (IV-B):
+- The script runs 100 iterations.
+- In each iteration, it generates a unique username and sends a POST request to /register on the US instance.
+- Immediately after, it sends a GET request to /list on the EU instance and checks whether the new username appears.
+- The script counts how many times the username was not found (misses) and prints the total misses out of 100.

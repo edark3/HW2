@@ -1,0 +1,17 @@
+Average Latency Measurements (10 requests each)
+
+US instance (http://34.10.10.248:8080)
+- /register average latency: 71.90 ms
+- /list average latency: 62.80 ms
+
+EU instance (http://35.205.7.81:8080)
+- /register average latency: 375.60 ms
+- /list average latency: 245.90 ms
+
+Eventual Consistency Experiment (100 iterations)
+- Misses (username not found immediately after remote write): 0 / 100
+
+Discussion
+The EU instance showed noticeably higher latency than the US instance for both /register and /list. This is expected because requests to a VM in europe-west1 from my location (and/or due to cross-region routing) generally incur higher network round-trip time and additional transit compared to us-central1. In addition, Firestore/Datastore operations add backend service time, and that overhead becomes more noticeable when network latency is higher.
+
+In the eventual consistency test, I observed 0 misses out of 100 trials. This suggests that replication from the US instance to the EU instance was fast enough that by the time the EU /list request completed, the new write had already propagated. Even though the system is eventually consistent, in practice the replication delay can be small (milliseconds) and may not always be visible in a simple immediate-read experiment.
